@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1;
 
+use App\Exceptions\DatabaseOperationException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Requests\v1\Tasks\CreateTaskRequest;
 use App\Http\Controllers\Requests\v1\Tasks\IndexTasksRequest;
@@ -16,11 +17,12 @@ class TaskController extends Controller
 {
     public function __construct(
         protected TasksRepository $tasksRepository
-    ) {}
+    ) {
+    }
 
     public function index(IndexTasksRequest $request): TaskResource
     {
-        $paginated = $this->tasksRepository->getUserParentTasks(
+        $paginated = $this->tasksRepository->getUserTasks(
             $request
         );
 
@@ -29,18 +31,14 @@ class TaskController extends Controller
 
     public function show(Task $task): TaskResource
     {
-        if (is_null($task->parent_id)) {
-            $task->load('children');
-        } else {
-            $task->load('parent');
-        }
+        $task->load(['parent', 'children']);
 
         return new TaskResource($task);
     }
 
     public function store(CreateTaskRequest $request): TaskResource
     {
-        $task = $this->tasksRepository->createUserTask(
+        $task = $this->tasksRepository->createTask(
             $request
         );
 
@@ -49,7 +47,7 @@ class TaskController extends Controller
 
     public function update(Task $task, UpdateTaskRequest $request)
     {
-        $task = $this->tasksRepository->updateUserTask(
+        $task = $this->tasksRepository->updateTask(
             $task,
             $request
         );
@@ -69,7 +67,9 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         if (!$task->delete()) {
-            dd('TODO handle me! cant delete');
+            throw new DatabaseOperationException(
+                'Unable to delete the task. Try again later.'
+            );
         }
         return response()->json([], 204);
     }

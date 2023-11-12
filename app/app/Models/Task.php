@@ -27,6 +27,7 @@ class Task extends Model
         'completed_at' => 'datetime',
     ];
 
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Task::class, 'parent_id');
@@ -35,7 +36,6 @@ class Task extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Task::class, 'parent_id')
-            ->orderBy('priority', 'desc')
-            ->orderBy('created_at', 'desc');
+            ->with('children');
     }
 }

@@ -14,7 +14,8 @@ class AuthController extends Controller
 {
     public function __construct(
         protected UsersRepository $usersRepository
-    ) {}
+    ) {
+    }
 
     public function login(LoginRequest $request): JsonResponse
     {

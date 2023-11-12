@@ -8,8 +8,7 @@ use App\Enums\Status;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class
-UpdateTaskRequest extends FormRequest
+class UpdateTaskRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -18,14 +17,7 @@ UpdateTaskRequest extends FormRequest
             'priority' => 'integer|min:1|max:5',
             'description' => 'string|max:2000',
             'status' => ['string', Rule::enum(Status::class)],
-            'parent_id' => [
-                'nullable',
-                'integer',
-                Rule::exists('tasks', 'id')->where(function ($query) {
-                    $query->whereNull('parent_id');
-                }),
-            ],
+            'parent_id' => 'nullable|integer|exists:tasks,id',
         ];
     }
 }
-

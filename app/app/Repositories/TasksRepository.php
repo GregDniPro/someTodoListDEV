@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Enums\Status;
+use App\Exceptions\DatabaseOperationException;
+use App\Exceptions\TaskHasUndoneChildrenException;
 use App\Http\Controllers\Requests\v1\Tasks\CreateTaskRequest;
 use App\Http\Controllers\Requests\v1\Tasks\IndexTasksRequest;
 use App\Http\Controllers\Requests\v1\Tasks\UpdateTaskRequest;
@@ -16,16 +18,14 @@ use Illuminate\Support\Str;
 
 class TasksRepository
 {
-    public function getUserParentTasks(IndexTasksRequest $request): LengthAwarePaginator
+    public function getUserTasks(IndexTasksRequest $request): LengthAwarePaginator
     {
-        $qb = DB::table('tasks')
-            ->whereNull('parent_id') //better place
-            ->where('user_id', '=', auth()->user()->id);
+        $qb = Task::where('user_id', '=', auth()->user()->id);
 
         if ($searchTerm = $request->validated('filters.search')) {
+            //TODO elasticsearch
             $searchIds = DB::table('tasks')
                 ->select('id')
-                ->whereNull('parent_id') //better place
                 ->whereRaw("to_tsvector('english', title || ' ' || description) @@ to_tsquery('english', ?)", [$searchTerm])
                 ->get();
             $qb->whereIn('id', $searchIds->pluck('id')->toArray());
@@ -44,10 +44,12 @@ class TasksRepository
             }
         }
 
+        $qb->with('children');
+
         return $qb->paginate();
     }
 
-    public function createUserTask(CreateTaskRequest $request): Task
+    public function createTask(CreateTaskRequest $request): Task
     {
         $task = new Task($request->validated());
         $task->user_id = auth()->user()->id;
@@ -61,13 +63,13 @@ class TasksRepository
         }
 
         if (!$task->save()) {
-            dd('TODO save failed, handle me!');
+            throw new DatabaseOperationException('Unable to create the task. Try again later.');
         }
 
         return $task;
     }
 
-    public function updateUserTask(Task $task, UpdateTaskRequest $request): Task
+    public function updateTask(Task $task, UpdateTaskRequest $request): Task
     {
         if ($title = $request->validated('title')) {
             $task->title = $title;
@@ -92,7 +94,7 @@ class TasksRepository
         }
 
         if (!$task->update()) {
-            dd('TODO cant update task, handle me');
+            throw new DatabaseOperationException('Unable to update the task. Try again later.');
         }
 
         return $task;
@@ -101,19 +103,24 @@ class TasksRepository
     public function completeUserTask(Task $task): Task
     {
         if (is_null($task->parent_id)) {
-            $todoChildTasksCount = DB::table('tasks')
+            //TODO rework to recursive search to check if all its possible children has done status
+            $undoneChildTasksCount = DB::table('tasks')
                 ->where('parent_id', '=', $task->id)
                 ->where('status', '=', Status::TODO->value)
                 ->count();
-            if ($todoChildTasksCount > 0) {
-                dd('PARENT WIT UNFINISHED CHILDREN! TODO HANDLE ME!');
+            if ($undoneChildTasksCount > 0) {
+                throw new TaskHasUndoneChildrenException(
+                    'Cannot mark task as done while dependent tasks are in "todo" status.'
+                );
             }
         }
         $task->status = Status::DONE->value;
         $task->completed_at = Carbon::now();
 
         if (!$task->update()) {
-            dd('TODO cant compete task, handle me');
+            throw new DatabaseOperationException(
+                'Unable to complete the task. Try again later.'
+            );
         }
         return $task;
     }

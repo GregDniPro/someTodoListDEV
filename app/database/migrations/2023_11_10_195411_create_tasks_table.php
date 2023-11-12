@@ -26,11 +26,15 @@ return new class extends Migration {
             $table->timestamp('completed_at')->nullable()->default(null);
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
-
             $table->foreign('parent_id')
                 ->references('id')
                 ->on('tasks')
                 ->onDelete('cascade');
+
+            $table->index('user_id');
+            $table->index('parent_id');
+            //todo additional indexes?
+
             $table->fullText(['title', 'description']);
         });
     }
