@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
     use HasFactory; //TODO what does?
-    //    use HasUuids; //TODO what does?
 
     protected $fillable = [
         'uuid',
@@ -22,6 +20,7 @@ class Task extends Model
         'completed_at',
         'parent_id'
     ];
+
     protected $casts = [
         'completed_at' => 'datetime',
     ];

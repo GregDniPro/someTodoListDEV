@@ -28,5 +28,8 @@ Route::middleware('auth:api')->group(function () {
 
 Route::prefix('v1')->middleware('auth:api')->group(function () {
     Route::apiResource('tasks', TaskController::class);
-    Route::patch('/tasks/done/{task}', [TaskController::class, 'done']);
+
+    Route::prefix('tasks')->group(function () {
+        Route::patch('/mark-done/{task}', [TaskController::class, 'done']);
+    });
 });

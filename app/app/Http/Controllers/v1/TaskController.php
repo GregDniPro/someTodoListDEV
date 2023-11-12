@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\v1\Requests\GetTasksRequest;
+use App\Http\Controllers\v1\Requests\CreateTaskRequest;
+use App\Http\Controllers\v1\Requests\IndexTasksRequest;
+use App\Http\Controllers\v1\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Repositories\TasksRepository;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -17,40 +18,55 @@ class TaskController extends Controller
         protected TasksRepository $tasksRepository
     ) {}
 
-    public function index(GetTasksRequest $request): JsonResponse
+    public function index(IndexTasksRequest $request): TaskResource
     {
-        $data = $this->tasksRepository->getUserTasks(
-            auth()->user(),
+        //TODO використовувати рекурсію або посилання для формування дерева тасок
+        $paginated = $this->tasksRepository->getUserTasks(
             $request
         );
 
-        return response()->json($data);
+        return new TaskResource($paginated);
     }
 
-    public function store(Request $request)
+    public function show(Task $task): TaskResource
     {
-        dd('post tasks');
+        return new TaskResource($task);
     }
 
-    public function show(Task $task)
+    public function store(CreateTaskRequest $request): TaskResource
     {
-        dd('show task');
-        //
+        $task = $this->tasksRepository->createUserTask(
+            $request
+        );
+
+        return new TaskResource($task);
     }
 
-    public function update(Task $task)
+    public function update(Task $task, UpdateTaskRequest $request)
     {
-        dd('patch/put task');
-    }
+        $task = $this->tasksRepository->updateUserTask(
+            $task,
+            $request
+        );
 
-    public function destroy(Task $task)
-    {
-        dd('delete task');
+        return new TaskResource($task);
     }
 
     public function done(Task $task)
     {
-        //todo set to done
-        dd('done');
+        //TODO відзначити як виконану задачу, у якої є невиконані завдання
+        $task = $this->tasksRepository->completeUserTask(
+            $task
+        );
+
+        return new TaskResource($task);
+    }
+
+    public function destroy(Task $task)
+    {
+        if (!$task->delete()) {
+            dd('TODO handle me! cant delete');
+        }
+        return response()->json([], 204);
     }
 }

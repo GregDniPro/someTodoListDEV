@@ -16,14 +16,14 @@ return new class extends Migration {
 
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->uuid()->unique();
+            $table->uuid()->unique()->nullable(false);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->mediumText('description');
+            $table->text('description')->nullable()->default(null);
             $table->enum('status', [Status::TODO->value, Status::DONE->value])
                 ->default(Status::TODO->value);
             $table->tinyInteger('priority')->nullable(false);
-            $table->timestamp('completed_at')->default(null);
+            $table->timestamp('completed_at')->nullable()->default(null);
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
 
