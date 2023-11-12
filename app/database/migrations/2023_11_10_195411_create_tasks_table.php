@@ -13,7 +13,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-
+        //TODO indexes for get tasks user+filters?
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique()->nullable(false);
@@ -27,7 +27,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->timestamps();
 
-            //TODO indexes for get tasks user+filters?
             $table->foreign('parent_id')
                 ->references('id')
                 ->on('tasks')

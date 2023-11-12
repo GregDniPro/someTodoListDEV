@@ -6,10 +6,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
 {
-    use HasFactory; //TODO what does?
+    use HasFactory;
 
     protected $fillable = [
         'uuid',
@@ -25,17 +27,15 @@ class Task extends Model
         'completed_at' => 'datetime',
     ];
 
-    //    protected $relations = [
-    //        'child-tasks'
-    //    ];
-
-    public function parentTask()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(Task::class, 'parent_id');
     }
 
-    public function childTasks()
+    public function children(): HasMany
     {
-        return $this->hasMany(Task::class, 'parent_id');
+        return $this->hasMany(Task::class, 'parent_id')
+            ->orderBy('priority', 'desc')
+            ->orderBy('created_at', 'desc');
     }
 }

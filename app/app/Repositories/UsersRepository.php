@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Http\Controllers\Requests\RegisterRequest;
+use App\Http\Controllers\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Str;
 

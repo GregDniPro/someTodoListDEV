@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Requests\LoginRequest;
-use App\Http\Controllers\Requests\RegisterRequest;
+use App\Http\Controllers\Requests\Auth\LoginRequest;
+use App\Http\Controllers\Requests\Auth\RegisterRequest;
 use App\Repositories\UsersRepository;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -63,7 +63,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60, //TODO move to config
+            'expires_in' => auth()->factory()->getTTL() * 60,
         ]);
     }
 }
