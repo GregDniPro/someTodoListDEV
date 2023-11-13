@@ -10,8 +10,11 @@ Commands to init:
 - Run "docker-compose run php php artisan db:seed" to fill db with example data.
 - TODO generate openAPI docs
 
-Optional for development purposes:
+Tests and codestyle:
+* TODO "./vendor/bin/codecept run" - run tests. TODO
 * "./vendor/bin/pint --config ./pint.json --test" - run PHP code style fixer (remove --test for autofix).
+
+Development tools:
 * "php artisan ide-helper:generate" - PHPDoc generation for Laravel Facades
 * "php artisan ide-helper:models" - PHPDocs for models
 * "php artisan ide-helper:meta" - PhpStorm Meta file
