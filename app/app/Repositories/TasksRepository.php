@@ -12,7 +12,6 @@ use App\Http\Controllers\Requests\v1\Tasks\IndexTasksRequest;
 use App\Http\Controllers\Requests\v1\Tasks\UpdateTaskRequest;
 use App\Models\Task;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
@@ -101,18 +100,12 @@ class TasksRepository
 
     public function completeUserTask(Task $task): Task
     {
-        if (is_null($task->parent_id)) {
-            //TODO rework to recursive search to check if all its possible children has done status
-            $undoneChildTasksCount = DB::table('tasks')
-                ->where('parent_id', '=', $task->id)
-                ->where('status', '=', Status::TODO->value)
-                ->count();
-            if ($undoneChildTasksCount > 0) {
-                throw new TaskHasUndoneChildrenException(
-                    'Cannot mark task as done while dependent tasks are in "todo" status.'
-                );
-            }
+        if (!$this->areAllChildrenDone($task)) {
+            throw new TaskHasUndoneChildrenException(
+                'Cannot mark task as done while dependent tasks are in "todo" status.'
+            );
         }
+
         $task->status = Status::DONE->value;
         $task->completed_at = Carbon::now();
 
@@ -122,5 +115,20 @@ class TasksRepository
             );
         }
         return $task;
+    }
+
+    protected function areAllChildrenDone(Task $task): bool
+    {
+        foreach ($task->children as $child) {
+            if ($child->status !== Status::DONE->value) {
+                return false;
+            }
+
+            if (!$this->areAllChildrenDone($child)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
