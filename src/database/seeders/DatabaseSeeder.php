@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Task;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,11 +16,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+         User::factory(10)->create([
+             'password' => 'seed_pass'
+         ]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+         // Seed parent tasks
+         Task::factory(50)->create([
+             'parent_id' => null
+         ]);
+
+         //Seed children tasks
+         Task::factory(250)->create();
     }
 }
