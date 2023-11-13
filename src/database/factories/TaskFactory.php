@@ -20,24 +20,36 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
-        $statuses = Status::cases();
-        $randomStatus = $statuses[array_rand($statuses)];
+        $userId = $this->getRandomUserId();
+        $status = $this->getRandomStatus();
 
         return [
-            'user_id' => $this->getRandomTableId('users'),
+            'user_id' => $userId,
             'title' => fake()->text('250'),
             'description' => fake()->text('2000'),
-            'status' => $randomStatus->value,
+            'status' => $status,
             'priority' => fake()->numberBetween(1, 5),
-            'completed_at' => ($randomStatus->value == Status::DONE->value) ? fake()->dateTime : null,
-            'parent_id' => $this->getRandomTableId('tasks'),
+            'completed_at' => ($status == Status::DONE->value) ? fake()->dateTime : null,
+            'parent_id' => $this->getRandomParentId($userId),
             'created_at' => fake()->dateTime,
             'updated_at' => fake()->dateTime,
         ];
     }
 
-    protected function getRandomTableId(string $table): null|int
+    protected function getRandomStatus(): string
     {
-        return DB::table($table)->inRandomOrder()->limit(1)->value('id');
+        $statuses = Status::cases();
+        return $statuses[array_rand($statuses)]->value;
+    }
+
+    protected function getRandomUserId(): int
+    {
+        return DB::table('users')->inRandomOrder()->limit(1)->value('id');
+    }
+
+    protected function getRandomParentId(int $userId): null|int
+    {
+        return DB::table('tasks')->where(['user_id' => $userId])
+            ->inRandomOrder()->limit(1)->value('id');
     }
 }

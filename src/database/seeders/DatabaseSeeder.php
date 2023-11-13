@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
              'password' => 'seed_pass'
          ]);
 
+
          // Seed parent tasks
          Task::factory(50)->create([
              'parent_id' => null
