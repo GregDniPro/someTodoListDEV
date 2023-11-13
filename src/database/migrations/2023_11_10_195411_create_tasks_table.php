@@ -27,12 +27,10 @@ return new class extends Migration {
             $table->foreign('parent_id')
                 ->references('id')
                 ->on('tasks')
-                ->onDelete('cascade'); //todo test cascade delete children
+                ->onDelete('cascade');
 
             $table->index('user_id');
             $table->index('parent_id');
-
-            //TODO additional indexes?
         });
     }
 

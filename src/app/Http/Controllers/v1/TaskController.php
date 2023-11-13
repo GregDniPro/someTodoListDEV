@@ -31,6 +31,8 @@ class TaskController extends Controller
 
     public function show(Task $task): TaskResource
     {
+        $this->authorize('view', $task);
+
         $task->load(['parent', 'children']);
 
         return new TaskResource($task);
@@ -47,6 +49,8 @@ class TaskController extends Controller
 
     public function update(Task $task, UpdateTaskRequest $request)
     {
+        $this->authorize('update', $task);
+
         $task = $this->tasksRepository->updateTask(
             $task,
             $request
@@ -57,6 +61,8 @@ class TaskController extends Controller
 
     public function done(Task $task)
     {
+        $this->authorize('markDone', $task);
+
         $task = $this->tasksRepository->completeUserTask(
             $task
         );
@@ -66,6 +72,8 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
+        $this->authorize('delete', $task);
+
         if (!$task->delete()) {
             throw new DatabaseOperationException(
                 'Unable to delete the task. Try again later.'
