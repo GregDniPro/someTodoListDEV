@@ -18,35 +18,34 @@ use Illuminate\Support\Str;
 
 class TasksRepository
 {
+    private const ITEMS_PER_PAGE = 50;
+
     public function getUserTasks(IndexTasksRequest $request): LengthAwarePaginator
     {
-        $qb = Task::where('user_id', '=', auth()->user()->id);
-
         if ($searchTerm = $request->validated('filters.search')) {
-            //TODO elasticsearch
-            $searchIds = DB::table('tasks')
-                ->select('id')
-                ->whereRaw("to_tsvector('english', title || ' ' || description) @@ to_tsquery('english', ?)", [$searchTerm])
-                ->get();
-            $qb->whereIn('id', $searchIds->pluck('id')->toArray());
+            $q = Task::search($searchTerm)->where('user_id', auth()->user()->id);
+        } else {
+            $q = Task::where('user_id', '=', auth()->user()->id);
         }
+
+        // Uncomment this conditions & result will be nested, like tree.
+        //$q->whereNull('parent_id');
+        //$q->with('children');
 
         if ($status = $request->validated('filters.status')) {
-            $qb->where('status', '=', $status);
+            $q->where('status', '=', $status);
         }
         if ($priority = $request->validated('filters.priority')) {
-            $qb->where('priority', '=', $priority);
+            $q->where('priority', '=', $priority);
         }
 
         if ($request->has('sort')) {
             foreach ($request->validated('sort') as $field => $direction) {
-                $qb->orderBy($field, $direction);
+                $q->orderBy($field, $direction);
             }
         }
 
-        $qb->with('children');
-
-        return $qb->paginate();
+        return $q->paginate(self::ITEMS_PER_PAGE);
     }
 
     public function createTask(CreateTaskRequest $request): Task

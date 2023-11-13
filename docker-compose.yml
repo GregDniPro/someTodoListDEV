@@ -38,6 +38,19 @@ services:
       - ./postgres/data:/var/lib/postgresql/data
     restart: always
 
+  elasticsearch:
+    container_name: todolist-es
+    image: elasticsearch:8.11.0 #todo move version to env
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+      xpack.security.enrollment.enabled: false
+      ES_USER: ${ES_USER}
+      ES_PASSWORD: ${ES_PASSWORD}
+      ES_MEMORY: 2g
+    ports:
+      - "9200:9200"
+
 networks:
   default:
     name: my_network

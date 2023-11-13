@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Matchish\ScoutElasticSearch\ElasticSearchServiceProvider;
 
 return [
 
@@ -170,6 +171,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        ElasticSearchServiceProvider::class,
     ])->toArray(),
 
     /*

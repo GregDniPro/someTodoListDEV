@@ -1,19 +1,20 @@
 {
     "name": "laravel/laravel",
     "type": "project",
-    "description": "The best skeleton application for the Laravel framework.",
+    "description": "The tasks list application.",
     "keywords": [
-        "laravel",
-        "framework",
-        "best skeleton"
+        "Todolist",
+        "Tasklist"
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
+        "laravel/scout": "^10.5",
         "laravel/tinker": "^2.8",
+        "matchish/laravel-scout-elasticsearch": "*",
         "tymon/jwt-auth": "*",
         "vyuldashev/laravel-openapi": "*"
     },
