@@ -13,7 +13,6 @@ class UsersRepository
     public function createFromRequest(RegisterRequest $request): User
     {
         return User::create([
-            'uuid' => Str::uuid(),
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),

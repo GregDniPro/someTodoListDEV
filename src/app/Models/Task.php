@@ -16,13 +16,12 @@ class Task extends Model
     use Searchable;
 
     protected $fillable = [
-        'uuid',
         'title',
         'description',
         'status',
         'priority',
+        'parent_id',
         'completed_at',
-        'parent_id'
     ];
 
     protected $casts = [

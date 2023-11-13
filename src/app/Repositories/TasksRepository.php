@@ -51,7 +51,6 @@ class TasksRepository
     {
         $task = new Task($request->validated());
         $task->user_id = auth()->user()->id;
-        $task->uuid = Str::uuid();
 
         if ($task->status == Status::DONE->value) {
             $task->completed_at = Carbon::now();
