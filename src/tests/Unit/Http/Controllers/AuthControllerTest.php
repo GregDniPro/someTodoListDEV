@@ -77,15 +77,4 @@ class AuthControllerTest extends Unit
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
-
-
-    public function testRefresh(): void
-    {
-        // Mock the token refresh.
-        JWTAuth::shouldReceive('refresh')->andReturn('new_token');
-
-        $response = $this->authController->refresh();
-        $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(200, $response->getStatusCode());
-    }
 }

@@ -13,4 +13,3 @@ class UsersRepositoryTest extends Unit
 
     }
 }
-

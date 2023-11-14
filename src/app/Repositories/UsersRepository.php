@@ -9,13 +9,9 @@ use App\Models\User;
 
 class UsersRepository
 {
-    public function __construct(public User $user)
-    {
-    }
-
     public function createFromRequest(RegisterRequest $request): User
     {
-        return $this->user->create([
+        return User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
