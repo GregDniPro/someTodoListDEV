@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Interfaces;
 
 use App\Http\Controllers\Requests\Auth\LoginRequest;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Interfaces\v1;
 
 use App\Http\Controllers\Requests\v1\Tasks\CreateTaskRequest;
