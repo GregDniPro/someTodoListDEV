@@ -16,10 +16,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed main test user
+        User::factory()->create([
+            'email' => 'main@example.net',
+            'password' => 'main_pass'
+        ]);
+
+        // Seed users
         User::factory(10)->create([
             'password' => 'seed_pass'
         ]);
-
 
         // Seed parent tasks
         Task::factory(50)->create([

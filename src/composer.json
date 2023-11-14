@@ -21,12 +21,12 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "*",
         "codeception/codeception": "^5.0",
+        "codeception/mockery-module": "*",
         "codeception/module-asserts": "^3.0",
         "codeception/module-laravel": "^3.1",
         "codeception/module-phpbrowser": "*",
         "codeception/module-rest": "^3.3",
         "codeception/module-webdriver": "^4.0",
-        "codeception/mockery-module": "*",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "nunomaduro/collision": "^7.0",

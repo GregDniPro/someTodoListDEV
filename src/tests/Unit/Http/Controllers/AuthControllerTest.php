@@ -69,14 +69,15 @@ class AuthControllerTest extends Unit
 
     public function testMe(): void
     {
-        // Mock the authenticated user.
-        $user = User::factory()->create();
+        // Mock the authenticated user without persisting to the database.
+        $user = User::factory()->make();
         JWTAuth::shouldReceive('user')->andReturn($user);
 
         $response = $this->authController->me();
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
 
     public function testRefresh(): void
     {

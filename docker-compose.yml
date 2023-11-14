@@ -38,6 +38,17 @@ services:
       - ./postgres/data:/var/lib/postgresql/data
     restart: always
 
+  testdb:
+    container_name: todolist-testdb
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${TEST_DB_DATABASE}
+      POSTGRES_USER: ${TEST_DB_USER}
+      POSTGRES_PASSWORD: ${TEST_DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    restart: always
+
   elasticsearch:
     container_name: todolist-es
     image: elasticsearch:${ES_VERSION}
