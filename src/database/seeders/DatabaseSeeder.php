@@ -16,17 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         User::factory(10)->create([
-             'password' => 'seed_pass'
-         ]);
+        User::factory(10)->create([
+            'password' => 'seed_pass'
+        ]);
 
 
-         // Seed parent tasks
-         Task::factory(50)->create([
-             'parent_id' => null
-         ]);
+        // Seed parent tasks
+        Task::factory(50)->create([
+            'parent_id' => null
+        ]);
 
-         //Seed children tasks
-         Task::factory(250)->create();
+        //Seed children tasks
+        Task::factory(250)->create();
     }
 }

@@ -13,7 +13,6 @@ use App\Http\Controllers\Requests\v1\Tasks\UpdateTaskRequest;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Str;
 
 class TasksRepository
 {

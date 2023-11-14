@@ -6,7 +6,6 @@ namespace App\Repositories;
 
 use App\Http\Controllers\Requests\Auth\RegisterRequest;
 use App\Models\User;
-use Illuminate\Support\Str;
 
 class UsersRepository
 {
