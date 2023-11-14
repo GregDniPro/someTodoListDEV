@@ -24,18 +24,18 @@ class TaskControllerTest extends Unit
     protected TaskController $taskController;
     protected TasksRepository $tasksRepository;
 
-    protected function _before()
+    protected function _before(): void
     {
         $this->tasksRepository = Mockery::mock(TasksRepository::class);
         $this->taskController = new TaskController($this->tasksRepository);
     }
 
-    protected function _after()
+    protected function _after(): void
     {
         Mockery::close();
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         // Create a mock request object & paginator.
         $request = Mockery::mock(IndexTasksRequest::class);
@@ -51,7 +51,7 @@ class TaskControllerTest extends Unit
         $this->assertInstanceOf(TaskResource::class, $response);
     }
 
-    public function testShow()
+    public function testShow(): void
     {
         $task = Mockery::mock(Task::class);
 
@@ -75,7 +75,7 @@ class TaskControllerTest extends Unit
         $this->assertEquals(new TaskResource($task), $response);
     }
 
-    public function testStore()
+    public function testStore(): void
     {
         // Mock a sample create task request object & create task validated request data.
         $request = Mockery::mock(CreateTaskRequest::class);
@@ -102,7 +102,7 @@ class TaskControllerTest extends Unit
         $this->assertInstanceOf(TaskResource::class, $response);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         // Mock a sample update task request object & update task validated request data.
         $request = Mockery::mock(UpdateTaskRequest::class);
@@ -127,7 +127,7 @@ class TaskControllerTest extends Unit
         $this->assertInstanceOf(TaskResource::class, $response);
     }
 
-    public function testDone()
+    public function testDone(): void
     {
         $task = Mockery::mock(Task::class);
 
@@ -141,7 +141,7 @@ class TaskControllerTest extends Unit
         $this->assertInstanceOf(TaskResource::class, $response);
     }
 
-    public function testDestroy()
+    public function testDestroy(): void
     {
         $task = Mockery::mock(Task::class);
 
