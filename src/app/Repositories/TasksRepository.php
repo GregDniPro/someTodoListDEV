@@ -11,10 +11,11 @@ use App\Http\Controllers\Requests\v1\Tasks\CreateTaskRequest;
 use App\Http\Controllers\Requests\v1\Tasks\IndexTasksRequest;
 use App\Http\Controllers\Requests\v1\Tasks\UpdateTaskRequest;
 use App\Models\Task;
+use App\Repositories\Interfaces\TasksRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class TasksRepository
+class TasksRepository implements TasksRepositoryInterface
 {
     public const ITEMS_PER_PAGE = 50;
 

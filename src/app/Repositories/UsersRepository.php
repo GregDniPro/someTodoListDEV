@@ -6,8 +6,9 @@ namespace App\Repositories;
 
 use App\Http\Controllers\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Repositories\Interfaces\UsersRepositoryInterface;
 
-class UsersRepository
+class UsersRepository implements UsersRepositoryInterface
 {
     public function createFromRequest(RegisterRequest $request): User
     {

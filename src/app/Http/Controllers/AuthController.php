@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Interfaces\AuthControllerInterface;
 use App\Http\Controllers\Requests\Auth\LoginRequest;
 use App\Http\Controllers\Requests\Auth\RegisterRequest;
-use App\Repositories\UsersRepository;
+use App\Repositories\Interfaces\UsersRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class AuthController extends Controller
+class AuthController extends Controller implements AuthControllerInterface
 {
     public function __construct(
-        protected UsersRepository $usersRepository
+        protected UsersRepositoryInterface $usersRepository
     ) {
     }
 
