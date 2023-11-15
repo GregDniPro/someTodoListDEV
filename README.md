@@ -54,5 +54,3 @@
   php artisan ide-helper:meta
   ```
 ```
-
-This refactoring adds headings for sections, formats command-line instructions as code blocks, and provides a cleaner structure for better readability. Feel free to adjust it further based on your preferences!
