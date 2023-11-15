@@ -10,6 +10,7 @@ use App\Http\Controllers\Requests\v1\Tasks\IndexTasksRequest;
 use App\Http\Controllers\Requests\v1\Tasks\UpdateTaskRequest;
 use App\Models\Task;
 use App\Models\User;
+use App\Repositories\Interfaces\TasksRepositoryInterface;
 use App\Repositories\TasksRepository;
 use Carbon\Carbon;
 use Codeception\Attribute\Skip;
@@ -43,7 +44,7 @@ class TasksRepositoryTest extends Unit
         // Mock Eloquent model interactions.
         $task = Mockery::mock(Task::class);
         $task->shouldReceive('where')->with('user_id', $user->id)->andReturnSelf();
-        $task->shouldReceive('paginate')->with(TasksRepository::ITEMS_PER_PAGE)->andReturn($paginator);
+        $task->shouldReceive('paginate')->with(TasksRepositoryInterface::ITEMS_PER_PAGE)->andReturn($paginator);
 
         // Mock the validated method to return an empty array.
         $request->shouldReceive('validated')->with('filters.search')->andReturn('');
@@ -96,7 +97,6 @@ class TasksRepositoryTest extends Unit
         $request->shouldReceive('validated')->with('title')->andReturn($requestTitle);
         $request->shouldReceive('validated')->with('priority')->andReturn($requestPriority);
         $request->shouldReceive('validated')->with('description')->andReturn($requestDescription);
-        $request->shouldReceive('validated')->with('status')->andReturn($requestStatus);
         $request->shouldReceive('validated')->with('parent_id')->andReturn(null);
 
         // Mock a sample task for updating.

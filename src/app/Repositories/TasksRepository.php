@@ -17,8 +17,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class TasksRepository implements TasksRepositoryInterface
 {
-    public const ITEMS_PER_PAGE = 50;
-
     public function getUserTasks(IndexTasksRequest $request): LengthAwarePaginator
     {
         if ($searchTerm = $request->validated('filters.search')) {
@@ -39,7 +37,7 @@ class TasksRepository implements TasksRepositoryInterface
         }
 
         if ($request->has('sort')) {
-            foreach ($request->validated('sort') as $field => $direction) {
+            foreach ($request->validated('sort') ?? [] as $field => $direction) {
                 $q->orderBy($field, $direction);
             }
         }
@@ -63,7 +61,7 @@ class TasksRepository implements TasksRepositoryInterface
             throw new DatabaseOperationException('Unable to create the task. Try again later.');
         }
 
-        return $task;
+        return $task->refresh();
     }
 
     public function updateTask(Task $task, UpdateTaskRequest $request): Task
@@ -76,15 +74,6 @@ class TasksRepository implements TasksRepositoryInterface
         }
         if ($description = $request->validated('description')) {
             $task->description = $description;
-        }
-        if ($status = $request->validated('status')) {
-            $task->status = $status;
-            if ($task->getOriginal('status') !== $status) {
-                match ($task->status) {
-                    Status::TODO->value => ($task->completed_at = null),
-                    Status::DONE->value => ($task->completed_at = Carbon::now()),
-                };
-            }
         }
         if ($parentId = $request->validated('parent_id')) {
             $task->parent_id = $parentId;
@@ -114,6 +103,15 @@ class TasksRepository implements TasksRepositoryInterface
             );
         }
         return $task;
+    }
+
+    public function markChildrenDone(Task $task): void
+    {
+        foreach ($task->children as $child) {
+            $child->status = Status::DONE->value;
+            $child->save();
+            $this->markChildrenDone($child);
+        }
     }
 
     protected function areAllChildrenDone(Task $task): bool

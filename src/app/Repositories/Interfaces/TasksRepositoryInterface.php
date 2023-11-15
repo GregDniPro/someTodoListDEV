@@ -12,6 +12,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface TasksRepositoryInterface
 {
+    public const ITEMS_PER_PAGE = 50;
+
     public function getUserTasks(IndexTasksRequest $request): LengthAwarePaginator;
 
     public function createTask(CreateTaskRequest $request): Task;

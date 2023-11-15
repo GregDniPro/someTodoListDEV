@@ -10,3 +10,4 @@ modules:
         run_database_migrations: true
         run_database_seeder: false
         database_seeder_class: TestDbSeeder
+        cleanup: true

@@ -8,6 +8,7 @@ use App\Models\User;
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
 use Codeception\Util\HttpCode;
+use Illuminate\Routing\Middleware\ThrottleRequests;
 use Tests\Support\ApiTester;
 
 class UserActionsCest
@@ -16,6 +17,7 @@ class UserActionsCest
 
     public function _before(ApiTester $I): void
     {
+        $I->disableMiddleware(ThrottleRequests::class);
         $this->user = User::factory()->create();
         $I->haveHttpHeader('Content-Type', 'application/json');
         $I->haveHttpHeader('Accept', 'application/json');
