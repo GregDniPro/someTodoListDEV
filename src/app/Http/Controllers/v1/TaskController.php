@@ -12,9 +12,22 @@ use App\Http\Controllers\Requests\v1\Tasks\IndexTasksRequest;
 use App\Http\Controllers\Requests\v1\Tasks\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\OpenApi\Parameters\CreateTaskParameters;
+use App\OpenApi\Parameters\ListTasksParameters;
+use App\OpenApi\Parameters\UpdateTaskParameters;
+use App\OpenApi\Responses\DeleteTaskResponse;
+use App\OpenApi\Responses\ListTasksResponse;
+use App\OpenApi\Responses\ShowTaskResponse;
+use App\OpenApi\Responses\ShowTaskWithRelationsResponse;
+use App\OpenApi\SecuritySchemes\BearerTokenSecurityScheme;
 use App\Repositories\Interfaces\TasksRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Vyuldashev\LaravelOpenApi\Attributes\Operation;
+use Vyuldashev\LaravelOpenApi\Attributes\Parameters;
+use Vyuldashev\LaravelOpenApi\Attributes\PathItem;
+use Vyuldashev\LaravelOpenApi\Attributes\Response;
 
+#[PathItem]
 class TaskController extends Controller implements TaskControllerInterface
 {
     public function __construct(
@@ -22,6 +35,14 @@ class TaskController extends Controller implements TaskControllerInterface
     ) {
     }
 
+    /**
+     * Get list of users tasks.
+     *
+     * Gets list of users tasks by filters.
+     */
+    #[Operation(security: BearerTokenSecurityScheme::class)]
+    #[Parameters(factory: ListTasksParameters::class)]
+    #[Response(factory: ListTasksResponse::class)]
     public function index(IndexTasksRequest $request): TaskResource
     {
         $paginated = $this->tasksRepository->getUserTasks(
@@ -31,6 +52,13 @@ class TaskController extends Controller implements TaskControllerInterface
         return new TaskResource($paginated);
     }
 
+    /**
+     * Show user task.
+     *
+     * Shows users task with relations.
+     */
+    #[Operation(security: BearerTokenSecurityScheme::class)]
+    #[Response(factory: ShowTaskWithRelationsResponse::class)]
     public function show(Task $task): TaskResource
     {
         $this->authorize('view', $task);
@@ -40,6 +68,14 @@ class TaskController extends Controller implements TaskControllerInterface
         return new TaskResource($task);
     }
 
+    /**
+     * Create new task.
+     *
+     * Stores users new task.
+     */
+    #[Operation(security: BearerTokenSecurityScheme::class)]
+    #[Parameters(factory: CreateTaskParameters::class)]
+    #[Response(factory: ShowTaskResponse::class)]
     public function store(CreateTaskRequest $request): TaskResource
     {
         $task = $this->tasksRepository->createTask(
@@ -49,6 +85,14 @@ class TaskController extends Controller implements TaskControllerInterface
         return new TaskResource($task);
     }
 
+    /**
+     * Update task.
+     *
+     * Updates users task.
+     */
+    #[Operation(security: BearerTokenSecurityScheme::class)]
+    #[Parameters(factory: UpdateTaskParameters::class)]
+    #[Response(factory: ShowTaskResponse::class)]
     public function update(Task $task, UpdateTaskRequest $request): TaskResource
     {
         $this->authorize('update', $task);
@@ -61,6 +105,13 @@ class TaskController extends Controller implements TaskControllerInterface
         return new TaskResource($task);
     }
 
+    /**
+     * Mark task as done.
+     *
+     * Marks users task as done.
+     */
+    #[Operation(security: BearerTokenSecurityScheme::class)]
+    #[Response(factory: ShowTaskResponse::class)]
     public function done(Task $task): TaskResource
     {
         $this->authorize('markDone', $task);
@@ -72,6 +123,13 @@ class TaskController extends Controller implements TaskControllerInterface
         return new TaskResource($task);
     }
 
+    /**
+     * Delete task.
+     *
+     * Deletes users task.
+     */
+    #[Operation(security: BearerTokenSecurityScheme::class)]
+    #[Response(factory: DeleteTaskResponse::class)]
     public function destroy(Task $task): JsonResponse
     {
         $this->authorize('delete', $task);

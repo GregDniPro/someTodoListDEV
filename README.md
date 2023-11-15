@@ -3,15 +3,15 @@ Requirements:
 - Add "todolist.local    127.0.0.1" string to your /etc/hosts.
 
 Commands to init:
-- cd to the project directory, where docker-compose.yml is located.
+- cd to the todolist project directory, where docker-compose.yml is located.
 - Run "cp .env.example .env && cp ./src/.env.example ./src/.env" to copy env files.
-- Run "docker-compose run php composer install -o" to install app dependencies.
+- Run "docker-compose run php composer install -o" to install dependencies.
 - Run "docker-compose run php php artisan migrate" to apply db migrations.
 - Run "docker-compose run php php artisan db:seed" to fill db with example data.
-- TODO generate openAPI docs
+- Run "php artisan openapi:generate" - to generate OpenAPI specification or open 'todolist.local/openapi' in your browser.
 
 Tests and codestyle:
-* TODO "./vendor/bin/codecept run" - run tests. TODO
+* "./vendor/bin/codecept run" - run tests
 * "./vendor/bin/pint --config ./pint.json --test" - run PHP code style fixer (remove --test for autofix).
 
 Development tools:
