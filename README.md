@@ -1,20 +1,58 @@
-Requirements:
+```markdown
+# Todolist Project
+
+## Requirements
 - Docker & docker-compose should be installed.
-- Add "todolist.local    127.0.0.1" string to your /etc/hosts.
+- Add the following line to your `/etc/hosts` file: `todolist.local    127.0.0.1`
 
-Commands to init:
-- cd to the todolist project directory, where docker-compose.yml is located.
-- Run "cp .env.example .env && cp ./src/.env.example ./src/.env" to copy env files.
-- Run "docker-compose run php composer install -o" to install dependencies.
-- Run "docker-compose run php php artisan migrate" to apply db migrations.
-- Run "docker-compose run php php artisan db:seed" to fill db with example data.
-- Run "php artisan openapi:generate" - to generate OpenAPI specification or open 'todolist.local/openapi' in your browser.
+## Commands to Initialize
+1. Navigate to the Todolist project directory, where `docker-compose.yml` is located.
+2. Run the following commands to copy environment files:
+   ```bash
+   cp .env.example .env
+   cp ./src/.env.example ./src/.env
+   ```
+3. Install dependencies:
+   ```bash
+   docker-compose run php composer install -o
+   ```
+4. Apply database migrations:
+   ```bash
+   docker-compose run php php artisan migrate
+   ```
+5. Fill the database with example data:
+   ```bash
+   docker-compose run php php artisan db:seed
+   ```
+6. Generate OpenAPI specification:
+   ```bash
+   php artisan openapi:generate
+   ```
+    - Alternatively, open 'todolist.local/openapi' in your browser.
 
-Tests and codestyle:
-* "./vendor/bin/codecept run" - run tests
-* "./vendor/bin/pint --config ./pint.json --test" - run PHP code style fixer (remove --test for autofix).
+## Tests and Codestyle
+- Run tests:
+  ```bash
+  ./vendor/bin/codecept run
+  ```
+- Run PHP code style fixer (remove `--test` for autofix):
+  ```bash
+  ./vendor/bin/pint --config ./pint.json --test
+  ```
 
-Development tools:
-* "php artisan ide-helper:generate" - PHPDoc generation for Laravel Facades
-* "php artisan ide-helper:models" - PHPDocs for models
-* "php artisan ide-helper:meta" - PhpStorm Meta file
+## Development Tools
+- Generate PHPDoc for Laravel Facades:
+  ```bash
+  php artisan ide-helper:generate
+  ```
+- Generate PHPDocs for models:
+  ```bash
+  php artisan ide-helper:models
+  ```
+- Generate PhpStorm Meta file:
+  ```bash
+  php artisan ide-helper:meta
+  ```
+```
+
+This refactoring adds headings for sections, formats command-line instructions as code blocks, and provides a cleaner structure for better readability. Feel free to adjust it further based on your preferences!
