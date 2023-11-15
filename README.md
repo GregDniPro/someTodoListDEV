@@ -53,4 +53,3 @@
   ```bash
   php artisan ide-helper:meta
   ```
-```
